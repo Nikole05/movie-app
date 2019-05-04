@@ -31,39 +31,29 @@ class Movie extends Component {
         }
     }
 
-    fetchItems = (endpoint) => {
-
+    fetchItems = async endpoint => {
         const { movieId } = this.props.match.params;
+        try { const result = await (await fetch(endpoint)).json();
+            if (result.status_code) {
 
-        fetch(endpoint)
-            .then(result => result.json())
-            .then(result => {
-
-                if (result.status_code) {
-
-                    this.setState({ loading: false });
-                } else {
-                    this.setState({ movie: result }, () => {
-
-                        let endpoint = `${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`;
-                        fetch(endpoint)
-                            .then(result => result.json())
-                            .then(result => {
-
-                                const directors = result.crew.filter((member) => member.job === "Director");
-
-                                this.setState({
-                                    actors: result.cast,
-                                    directors,
-                                    loading: false
-                                }, () => {
-                                    localStorage.setItem(`${movieId}`, JSON.stringify(this.state));
-                                })
-                            })
-                    })
-                }
-            })
-            .catch(error => console.error('Error:', error))
+                this.setState({ loading: false });
+            } else {
+                this.setState({ movie: result })
+                const creditsEndpoint = `${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`;
+                const creditsResult = await (await fetch(creditsEndpoint)).json();
+                const directors = creditsResult.crew.filter((member) => member.job === "Director");
+                this.setState({
+                    actors: creditsResult.cast,
+                    directors,
+                    loading: false
+                }, () => {
+                    localStorage.setItem(`${movieId}`, JSON.stringify(this.state));
+                })
+            }
+        }
+        catch (e) {
+            console.log("There was an error: ", e);
+        }
     }
 
     render() {
