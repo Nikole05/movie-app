@@ -58,33 +58,33 @@ class Home extends Component {
             endpoint = `${API_URL}search/movie?api_key=${API_KEY}&language=en-US&query=${searchTerm}&page=${currentPage + 1}`;
         }
         this.fetchItems(endpoint);
-    }
+    };
 
-    fetchItems = (endpoint) => {
-       
+    fetchItems = async endpoint => {
         const { movies, heroImage, searchTerm } = this.state;
+        const result = await (await fetch(endpoint)).json();
+        try {
+            this.setState({
+                movies: [...movies, ...result.results],
+                heroImage: heroImage || result.results[0],
+                loading: false,
+                currentPage: result.page,
+                totalPages: result.total_pages
+            }, () => {
 
-        fetch(endpoint)
-            .then(result => result.json())
-            .then(result => {
-                this.setState({
-                    movies: [...movies, ...result.results],
-                    heroImage: heroImage || result.results[0],
-                    loading: false,
-                    currentPage: result.page,
-                    totalPages: result.total_pages
-                }, () => {
+                if (searchTerm === "") {
+                    sessionStorage.setItem('HomeState', JSON.stringify(this.state));
+                }
+            });
 
-                    if (searchTerm === "") {
-                        sessionStorage.setItem('HomeState', JSON.stringify(this.state));
-                    }
-                })
-            })
-            .catch(error => console.error('Error:', error))
+        } catch (e) {
+            console.log("There was an error: ", e);
+        }
     }
 
+   
     render() {
- 
+
         const { movies, heroImage, loading, currentPage, totalPages, searchTerm } = this.state;
 
         return (
