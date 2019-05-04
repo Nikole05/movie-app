@@ -17,7 +17,7 @@ class Movie extends Component {
     }
 
     componentDidMount() {
-        // ES6 destructuring the props
+
         const { movieId } = this.props.match.params;
 
         if (localStorage.getItem(`${movieId}`)) {
@@ -25,14 +25,14 @@ class Movie extends Component {
             this.setState({ ...state })
         } else {
             this.setState({ loading: true })
-            // First fetch the movie ...
+
             let endpoint = `${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`;
             this.fetchItems(endpoint);
         }
     }
 
     fetchItems = (endpoint) => {
-        // ES6 destructuring the props
+
         const { movieId } = this.props.match.params;
 
         fetch(endpoint)
@@ -40,11 +40,11 @@ class Movie extends Component {
             .then(result => {
 
                 if (result.status_code) {
-                    // If we don't find any movie
+
                     this.setState({ loading: false });
                 } else {
                     this.setState({ movie: result }, () => {
-                        // ... then fetch actors in the setState callback function
+
                         let endpoint = `${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`;
                         fetch(endpoint)
                             .then(result => result.json())
@@ -67,7 +67,7 @@ class Movie extends Component {
     }
 
     render() {
-        // ES6 Destructuring the props and state
+   
         const { movieName } = this.props.location;
         const { movie, directors, actors, loading } = this.state;
 

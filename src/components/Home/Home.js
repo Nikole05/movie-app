@@ -46,7 +46,7 @@ class Home extends Component {
     }
 
     loadMoreItems = () => {
-        // ES6 Destructuring the state
+
         const { searchTerm, currentPage } = this.state;
 
         let endpoint = '';
@@ -61,7 +61,7 @@ class Home extends Component {
     }
 
     fetchItems = (endpoint) => {
-        // ES6 Destructuring the state
+       
         const { movies, heroImage, searchTerm } = this.state;
 
         fetch(endpoint)
@@ -74,7 +74,7 @@ class Home extends Component {
                     currentPage: result.page,
                     totalPages: result.total_pages
                 }, () => {
-                    // Remember state for the next mount if we´re not in a search view
+
                     if (searchTerm === "") {
                         sessionStorage.setItem('HomeState', JSON.stringify(this.state));
                     }
@@ -84,7 +84,7 @@ class Home extends Component {
     }
 
     render() {
-        // ES6 Destructuring the state
+ 
         const { movies, heroImage, loading, currentPage, totalPages, searchTerm } = this.state;
 
         return (
