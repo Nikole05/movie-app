@@ -6,7 +6,14 @@ import './MovieThumb.css';
 const MovieThumb = (props) => {
     return (
         <div className="rmdb-moviethumb">
-            <img src={props.image} alt="moviethumb" />
+            
+            {props.clickable ?
+                <Link to={{ pathname: `/${props.movieId}`, movieName: `${props.movieName}` }}>
+                    <img className="clickable" src={props.image} alt="moviethumb" />
+                </Link>
+                :
+                <img src={props.image} alt="moviethumb" />
+            }
         </div>
     )
 }
